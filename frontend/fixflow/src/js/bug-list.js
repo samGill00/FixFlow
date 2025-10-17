@@ -1,0 +1,1 @@
+/*This page shows all the recorded bugs of the projects*/

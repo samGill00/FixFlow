@@ -1,0 +1,33 @@
+.root {
+  display: flex;
+  justify-content: space-between;
+  align-items: left;
+  padding: 20px 40px;
+  background-color: #1e1e2f;
+  color: #ffffff;
+}
+
+/* body style*/
+body {
+  background-color: black; /* default theme*/
+  color: white;
+}
+
+.DarkThm {
+    background-color: black;
+    color: white;
+}
+
+.WhiteThm {
+    background-color: white;
+    color: black;
+}
+
+.Projects {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px 40px;
+  background-color: inherit;
+  color: #ffffff;
+}

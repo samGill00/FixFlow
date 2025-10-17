@@ -1,0 +1,6 @@
+#node modules 
+frontend/fixflow/node_modules/
+frontend/node_modules/
+
+#expo folder 
+frontend/fixflow/.expo/

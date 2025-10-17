@@ -1,0 +1,21 @@
+.project-grid-light {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 3 equal columns */
+  gap: 10px;
+  padding: 10px;
+  background-color: #0c0b0b;
+  text-align: center;
+}
+
+.project-grid-dark {
+    display: grid;
+  grid-template-columns: repeat(4, 1fr); /* 3 equal columns */
+  gap: 10px;
+  padding: 10px;
+  background-color: #453636;
+  text-align: center;
+}
+
+.projects {
+
+}
