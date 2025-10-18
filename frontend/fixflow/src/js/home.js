@@ -14,5 +14,6 @@ function HomePage() {
     );
 }
 
+
 //exporting the homepage function
 export default HomePage ;

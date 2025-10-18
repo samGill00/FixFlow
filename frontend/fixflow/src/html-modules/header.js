@@ -3,7 +3,7 @@ import '../semantic-css/home.css'; // Import the CSS file
 
 function Header() {
   return (
-    <header className='header'>
+    <header className='headerTop'>
       <h1 >FixFlow</h1>
     </header>
   );

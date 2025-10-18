@@ -2,6 +2,11 @@
 //home page component for storing project list */
 import React from 'react';
 
+//routing comp 
+import { Link } from 'react-router-dom'
+
+//other components 
+import VerticalBar from './verticleBar';
 
 function ProjectList() {
     //rendering 
@@ -14,12 +19,21 @@ function ProjectList() {
         name={projs[1]}
         status={projs[2]}
         bugs={projs[3]}
+        key={projs[0]}
         />
     ));
     return (
-           <div >
-               <h2 className='Projects'>Project List</h2>
-               {Projects}
+           <div class="ui grid">
+            <div class="four wide column">
+                <VerticalBar />
+            </div>
+            <div className="twelve wide column">
+                <h2 className='Projects' style={{ color: '#ff5722' }}>Projects</h2>
+                <div className="ui link stackable cards">
+                
+                {Projects}
+                </div>
+               </div>
             </div>     
             );
 }
@@ -29,26 +43,37 @@ function ProjectList() {
 function ProjectEntry(props) {
     //if its a header 
     //cosnt for 
-    if (props.id  === 0){
-        return (
-            <div className='project-grid-dark'>
-                <div>ID</div>
-                <div>Name</div>
-                <div>Status</div>
-                <div>Active Bugs</div>
+   return (     
+        <div className="card">
+            <div className="content">
+            <Link className="header" to={`/projects/${props.id}`} key={props.id}>
+                {props.name}
+             </Link>
+            <div className="description">
+                {props.status}
+                {/* I need to add some css to  add other things nicely */} 
             </div>
-        )
-    }
-    else {
-        return (
-            <div className= {props.id % 2 == 0? 'project-grid-dark': 'project-grid-light'}> 
-                <div>{props.id}</div>
-                <div>{props.name}</div>
-                <div>{props.status}</div>
-                <div>{props.bugs}</div>
+            <div className="ui horizontal list">
+                <div className="item">
+                <div className="ui mini teal label">12 Bugs</div>
+                </div>
+                <div className="item">
+                <div className="ui mini blue label">React</div>
+                </div>
+                <div className="item">
+                <div className="ui mini purple label">UI/UX</div>
+                </div>
+                <div className="item">
+                <div className="ui mini orange label">High Priority</div>
+                </div>
             </div>
-        )
-    }
+            </div>
+        </div>
+        
+    
+    
+
+   )
 }
 
 //routing to next page button to view projects in large

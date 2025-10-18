@@ -2,7 +2,22 @@
 //it is also the first page.
 //importing required pages */
 import React from 'react';
+
+//routing components 
+import {
+BrowserRouter as Router,
+Route,
+Link,
+Redirect,
+Routes,
+} from 'react-router-dom'
+
+
+
+
 import HomePage from "./home"
+import ProjectPage from "./projectPage"
+
 /*header file */
 import Header from "../html-modules/header";
 //css files 
@@ -16,8 +31,12 @@ class App extends React.Component{
             /*header*/
             <div>
                 <Header />
-                <div >                   
-                    <HomePage />
+                <div  >  
+                    <Routes>
+                        <Route exact path='/' element={<HomePage />}></Route>
+                        <Route exact path='/projects/:projectID' element={<ProjectPage />}></ Route >
+                    </Routes>                
+                    
                 </div>                
             </div>
             

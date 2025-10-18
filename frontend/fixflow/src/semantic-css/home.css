@@ -1,10 +1,10 @@
-.header {
+.headerTop {
   display: flex;
   justify-content: center;
   align-items: left;
   padding: 20px 40px;
-  background-color: #1e1e2f;
+  background-color: #050546;
   color: #ffffff;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 4px rgba(67, 5, 5, 0.1);
 }
 
