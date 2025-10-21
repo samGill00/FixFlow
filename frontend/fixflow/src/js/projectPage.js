@@ -4,6 +4,8 @@ import React from 'react';
 import { Link } from 'react-router-dom'
 
 import VerticalBar from './verticleBar';
+import Bugs from './bug-list';
+
 //react hooks 
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 
@@ -25,29 +27,50 @@ const ProjectPage = () => {
 
 
         <div className="thirteen wide column">
-            <div className="ui segment">
-            <h2 className="ui header">{project[1]}</h2>
-            <p>this is no projj </p>
+            <div style={{ marginTop: '2rem' }}></div>
+            <PageHeader />
 
-            <div className="ui horizontal list">
-                <div className="item">
-                <div className="ui mini teal label">12 Bugs</div>
-                </div>
-                <div className="item">
-                <div className="ui mini blue label">React</div>
-                </div>
-                <div className="item">
-                <div className="ui mini purple label">UI/UX</div>
-                </div>
-                <div className="item">
-                <div className="ui mini orange label">High Priority</div>
-                </div>
-            </div>
-            </div>
+            <div className="ui section divider"></div>
+            <Bugs />
         </div>
         </div>
     )
 
 };
+
+//project header 
+const PageHeader = () =>{
+    
+    return (
+        <div >
+        <h2 className="ui  header">🚀 Project Alpha</h2>
+        <div className="meta">Tracking bugs and performance issues</div>
+        
+        <div style={{ marginTop: '2rem' }} />
+        {/* Bug Count + Tags */}
+        <div className="four wide column right aligned">
+        <div className="ui horizontal list">
+            <div className="item">
+            <div className="ui red label">
+                <i className="bug icon"></i> 14 Bugs
+            </div>
+            </div>
+            <div className="item">
+            <div className="ui blue label">UI</div>
+            </div>
+            <div className="item">
+            <div className="ui purple label">Backend</div>
+            </div>
+            <div className="item">
+            <div className="ui orange label">Performance</div>
+            </div>
+        </div>
+        </div>
+        </div>
+
+    )
+}
+
+
 
 export default ProjectPage;

@@ -1,0 +1,16 @@
+[
+  {
+    "Title": "Login button not responding",
+    "Status": "Open",
+    "Priority": "High",
+    "Assigned": "Frontend Team",
+    "Date": "2025-10-20"
+  },
+  {
+    "Title": "API timeout on dashboard load",
+    "Status": "In Progress",
+    "Priority": "Critical",
+    "Assigned": "Backend Team",
+    "Date": "2025-10-19"
+  }
+]
