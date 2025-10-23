@@ -17,6 +17,8 @@ Routes,
 
 import HomePage from "./home"
 import ProjectPage from "./projectPage"
+import NotFound from './notFound';
+
 
 /*header file */
 import Header from "../html-modules/header";
@@ -35,6 +37,8 @@ class App extends React.Component{
                     <Routes>
                         <Route exact path='/' element={<HomePage />}></Route>
                         <Route exact path='/projects/:projectID' element={<ProjectPage />}></ Route >
+                        {/*route to catch them all*/}
+                        <Route path="*" element={<NotFound />} />
                     </Routes>                
                     
                 </div>                

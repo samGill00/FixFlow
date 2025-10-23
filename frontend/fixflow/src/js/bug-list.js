@@ -3,20 +3,22 @@ import React, {useState, useEffect} from "react";
 
 //importing semantic react components 
 import {Button, Modal, Form} from 'semantic-ui-react';
-
+import { useParams } from "react-router-dom";
 //data locally imported 
 import bugList from './/data/bug-data.json';
 
 
 
 //bugs represents in the project page 
-function Bugs(bug) {
+function Bugs() {
     //variables and function to determine when editing is on 
     const [isEditing, setIsEditing] = useState(false);
 
-    //state variables, one function for changing state 
-    const [bugData, editBugData] = useState(bugList);
+    //getting the  id from url 
+    const {projectID} = useParams() 
 
+    //state variables, one function for changing state 
+    const [bugData, editBugData] = useState(bugList[`${projectID}`]);
     //variable when new bug is created 
     const [isNewBug, setNewBug] = useState(false);
 
@@ -179,15 +181,13 @@ const AddBug = (bugData) =>{
     return (
             <div >
             <button className="ui icon primary button" title="Add new bug">
-                <i className="plus icon" onClick={() => {bugData.setNewBug(true)
-                    bugData.setOpen(true)
+                <i className="plus icon" onClick={() => {bugData.setOpen(true)
                 }}></i>
             </button>
             <div className="description" style={{ marginTop: '0.5rem' }}>
                 <strong>Add New Bug</strong>
             </div>
             </div>
-
     )
 };
 

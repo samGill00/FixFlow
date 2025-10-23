@@ -1,22 +1,29 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 //routing comp 
 import { Link } from 'react-router-dom'
 
 import VerticalBar from './verticleBar';
 import Bugs from './bug-list';
+import { AddTags } from './projectList';
+
+//importing data 
+import projectList from './data/project-data.json';
 
 //react hooks 
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 
 const ProjectPage = () => {
-    //hard coded vlaues needs changing 
-    const TestProjects = [[0,'Testing','active','3'],[1,'Testing','active','3'],[2,'Testing','active','4']];
+
+    //loading data 
+    const [projectData, setProjectData] = useState(projectList)
     //geting project id from url 
-    const {id} = useParams();
-    const project = TestProjects.find(
-                (a) => a.id === id
+    const {projectID} = useParams();
+    
+    const project = projectData.find(
+                (a) => a.ID === projectID
                 );
+
     return (
             
         <div className="ui grid">
@@ -28,7 +35,11 @@ const ProjectPage = () => {
 
         <div className="thirteen wide column">
             <div style={{ marginTop: '2rem' }}></div>
-            <PageHeader />
+            <PageHeader
+             name={project.Title}
+             tags={project.Tags}
+             bugs={project.Bugs}
+             />
 
             <div className="ui section divider"></div>
             <Bugs />
@@ -39,11 +50,11 @@ const ProjectPage = () => {
 };
 
 //project header 
-const PageHeader = () =>{
+const PageHeader = (props) =>{
     
     return (
         <div >
-        <h2 className="ui  header">🚀 Project Alpha</h2>
+        <h2 className="ui  header">{props.name}</h2>
         <div className="meta">Tracking bugs and performance issues</div>
         
         <div style={{ marginTop: '2rem' }} />
@@ -52,24 +63,18 @@ const PageHeader = () =>{
         <div className="ui horizontal list">
             <div className="item">
             <div className="ui red label">
-                <i className="bug icon"></i> 14 Bugs
+                <i className="bug icon"></i> {props.bugs} Bugs
             </div>
             </div>
-            <div className="item">
-            <div className="ui blue label">UI</div>
+
+            <AddTags projTags={props.tags} />
             </div>
-            <div className="item">
-            <div className="ui purple label">Backend</div>
-            </div>
-            <div className="item">
-            <div className="ui orange label">Performance</div>
-            </div>
-        </div>
         </div>
         </div>
 
     )
 }
+
 
 
 
