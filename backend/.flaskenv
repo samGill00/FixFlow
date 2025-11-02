@@ -1,0 +1,2 @@
+FLASK_APP=fixflow:create_app
+FLASK_ENV=development

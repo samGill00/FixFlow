@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 //routing comp 
 import { Link } from 'react-router-dom'
@@ -14,15 +14,23 @@ import projectList from './data/project-data.json';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 
 const ProjectPage = () => {
-
-    //loading data 
-    const [projectData, setProjectData] = useState(projectList)
     //geting project id from url 
     const {projectID} = useParams();
-    
-    const project = projectData.find(
-                (a) => a.ID === projectID
-                );
+
+    const [project, setproject] = useState([])
+
+    //function that converts the strings in tags 
+    const stringToList = (input) => {
+        const tagString  = input.tags.split(',').map(str => str.trim())
+        return {... input, tags : tagString}
+    }
+    //loading data 
+    useEffect(() => {
+        fetch(`http://localhost:5000/data/getproject?projectid=${projectID}`)
+            .then(res => res.json())
+            .then(data => setproject(stringToList(data)))
+    .catch(err => console.error(err));
+        }, []);
 
     return (
             
@@ -36,9 +44,10 @@ const ProjectPage = () => {
         <div className="thirteen wide column">
             <div style={{ marginTop: '2rem' }}></div>
             <PageHeader
-             name={project.Title}
-             tags={project.Tags}
-             bugs={project.Bugs}
+             key={project.projectId}
+             name={project.title}
+             tags={project.tags}
+             bugs={project.bug_count}
              />
 
             <div className="ui section divider"></div>
@@ -66,8 +75,11 @@ const PageHeader = (props) =>{
                 <i className="bug icon"></i> {props.bugs} Bugs
             </div>
             </div>
-
-            <AddTags projTags={props.tags} />
+            {/*addig condition to reder when  data is ready */}
+            {props.tags && (
+                <AddTags projTags={props.tags} />
+                )}
+            
             </div>
         </div>
         </div>

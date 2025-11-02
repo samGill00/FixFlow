@@ -1,0 +1,11 @@
+[project]
+name = "fixflow"
+version = "1.0.0"
+description = "The server used as backend to handle data for the react frontend."
+dependencies = [
+    "flask",
+]
+
+[build-system]
+requires = ["flit_core<4"]
+build-backend = "flit_core.buildapi"

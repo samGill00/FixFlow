@@ -2,7 +2,9 @@
 import React, {useState, useEffect} from "react"; 
 
 //importing semantic react components 
-import {Button, Modal, Form} from 'semantic-ui-react';
+import {Button, Modal, Form, Input, Label, Icon} from 'semantic-ui-react';
+import  DatePicker from 'react-semantic-ui-datepickers';
+
 import { useParams } from "react-router-dom";
 //data locally imported 
 import bugList from './/data/bug-data.json';
@@ -18,7 +20,16 @@ function Bugs() {
     const {projectID} = useParams() 
 
     //state variables, one function for changing state 
-    const [bugData, editBugData] = useState(bugList[`${projectID}`]);
+    const [bugData, editBugData] = useState([]);
+
+    //getting/ sedding data 
+    useEffect(() => {
+            fetch(`http://localhost:5000/data/bugdata?projectid=${projectID}`)
+                .then(res => res.json())
+                .then(data => editBugData(data))
+        .catch(err => console.error(err));
+            }, []);
+
     //variable when new bug is created 
     const [isNewBug, setNewBug] = useState(false);
 
@@ -34,19 +45,58 @@ function Bugs() {
             editBugData({ ... bugData , [name]: value});
             //console.log(e)
     }
-    //event when adding new bug 
-    const handleNewBug = () =>{
-        ///
+     //function to handle form submit for both updating and adding new 
+    const handleSave = async (updatedBug, type) =>{
+      setOpen(false)
+      //console.log("inside header ",type)
+    try {
+      const response = await fetch('http://localhost:5000/data/addbug', {
+        method: type,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(updatedBug)
+      })
+        .then(res => res.json())
+        .then(data => editBugData(data))
+
+      const result = await response.json();
+      //console.log(result);
+    } catch (error) {
+    console.error("Error sending data:", error);
+  }
+    setSelectedBug(null);
+    setIsEditing(false);
     }
+  
+
+    //function for deleting the project data 
+    const handleDelete = async (projID, bugID) => {
+      try {
+        const response = await fetch(`http://localhost:5000/data/removebug?projectid=${projID}&bugid=${bugID}`, {
+          method: 'DELETE'
+        })
+          .then(res => res.json())
+          .then(data => editBugData(data))
+
+        const result = await response.json();
+      //console.log(result);
+      } 
+      catch (error) {
+      console.error("Error deleting data:", error);
+      }
+    }
+
+
     //handle edtiting button 
     const handleEditButton = (e) =>{
         setSelectedBug();
     }
     // funtion that saves data from the edited form 
-    const handleSave = () =>{
-        //backend ....
-        setIsEditing(false);
-    }
+    // const handleSave = () =>{
+    //     //backend ....
+        
+    // }
     
     return (
         <div className="ui container">
@@ -59,12 +109,14 @@ function Bugs() {
         <div key={index} className="ui card" >
             <div className="content">
                 <DisplayBug
-                    title={bug.Title}
-                    status={bug.Status}
-                    date={bug.Date}
-                    priority={bug.Priority}
-                    assigned={bug.Assigned}
+                    key={bug.bugId}
+                    title={bug.title}
+                    status={bug.status}
+                    date={bug.date}
+                    priority={bug.priority}
+                    assigned={bug.assigned}
                     setIsEditing={() => setSelectedBug(bug)}
+                    deleteProject = {() => handleDelete(bug.projectId,bug.bugId)}
                     /> 
            </div>
            </div>
@@ -84,26 +136,25 @@ function Bugs() {
         <ReactModal
             bug = {selectedBug}     
             onClose={() => setSelectedBug(null)}
-            onSave={(updatedBug) => {
-            // handle save logic here
-            console.log('Updated bug:', updatedBug);
-            setSelectedBug(null);
-          }}
+            onSave={(data) => { handleSave(data, 'PUT'); }}
           type = {"Edit Bug"}
            />
         )}
         {open ?
 
-            //creating a new temporarty and empty bug to pass to react modal
-            
+            //creating a new temporarty and empty bug to pass to react modal           
            <ReactModal
-            bug = {{"Title" :  ""}}   // giving an empty title with no default values  
+            bug = {
+                    {bugId : '',
+                    title: '',
+                    status :'',
+                    priority: '',
+                    assigned: '',
+                    date: '',
+                  projectId: projectID}
+                  }  // giving an empty title with no default values  
             onClose={() => setOpen(false)}
-            onSave={(updatedBug) => {
-            // handle save logic here
-            console.log('Updated bug:', updatedBug);
-            setOpen(false);
-            }}
+            onSave={(data) => { handleSave(data, 'POST')}}
             type = {"New Bug"} 
            />
         : <></> }
@@ -122,9 +173,12 @@ const DisplayBug = (bug) =>{
             <p><strong>Status:</strong>{bug.status}</p>
             <p><strong>Priority:</strong>{bug.priority}</p>
             <p><strong>Assigned to:</strong>{bug.assigned}</p>
-            <p><strong>Tags:</strong> <span className="ui tiny label">UI</span> <span className="ui tiny label">Login</span></p>
-            <div className="extra content">
-              <button className="ui mini button" onClick={bug.setIsEditing} >Edit</button>
+           
+            <div className="extra content" style={{ display: 'flex', gap: '0.5em' }}>
+              <button className="ui mini button" onClick={bug.setIsEditing}  >Edit</button>
+              <button className="ui mini red icon button" onClick={bug.deleteProject}  >
+                <i className="trash alternate outline icon"></i>
+                </button>
             </div>
 
             </div>
@@ -246,9 +300,19 @@ function ReactModal({ bug, onSave, onClose, type }) {
     };
 
     const handleSubmit = () => {
+      console.log("form ", formData)
         onSave(formData);
     };
 
+    //funtion for handle data change 
+    const handleDateChange = (event, data) => {
+      if (!data.value) return;
+      const dateOnly = data.value.toISOString().split('T')[0]; 
+      setFormData(prev => ({
+        ...prev,
+        date: dateOnly
+      }));
+    };
 
 
   return (
@@ -264,11 +328,11 @@ function ReactModal({ bug, onSave, onClose, type }) {
           <form className="ui form" >
             <div className="field">
               <label>Title</label>
-              <input name="Title" value={formData.Title} onChange={handleChange} />
+              <input name="title" value={formData.title} onChange={handleChange} />
             </div>
             <div className="field">
               <label>Status</label>
-              <select name="Status" value={formData.Status} onChange={handleChange} className="ui dropdown">
+              <select name="status" value={formData.status} onChange={handleChange} className="ui dropdown">
                 <option>Open</option>
                 <option>In Progress</option>
                 <option>Resolved</option>
@@ -276,7 +340,7 @@ function ReactModal({ bug, onSave, onClose, type }) {
             </div>
             <div className="field">
               <label>Priority</label>
-              <select name="Priority" value={formData.Priority} onChange={handleChange} className="ui dropdown">
+              <select name="priority" value={formData.priority} onChange={handleChange} className="ui dropdown">
                 <option>Low</option>
                 <option>Medium</option>
                 <option>High</option>
@@ -285,11 +349,20 @@ function ReactModal({ bug, onSave, onClose, type }) {
             </div>
             <div className="field">
               <label>Assigned To</label>
-              <input name="Assigned" value={formData.Assigned} onChange={handleChange} />
+              <input name="assigned" value={formData.assigned} onChange={handleChange} />
             </div>
+            
             <div className="field">
               <label>Date</label>
-              <input name="Date" value={formData.Date} onChange={handleChange} />
+              <DatePicker
+                value={formData.date ? new Date(formData.date) : null}
+                onChange={handleDateChange}
+                placeholder="Select a date"
+                clearable
+                format="DD/MM/YYYY"
+                locale="en-GB"
+              />
+
             </div>
           </form>
         </Modal.Content>

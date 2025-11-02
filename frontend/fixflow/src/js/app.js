@@ -35,8 +35,8 @@ class App extends React.Component{
                 <Header />
                 <div  >  
                     <Routes>
-                        <Route exact path='/' element={<HomePage />}></Route>
-                        <Route exact path='/projects/:projectID' element={<ProjectPage />}></ Route >
+                        <Route path='/' element={<HomePage />}></Route>
+                        <Route  path='/projects/:projectID' element={<ProjectPage />}></ Route >
                         {/*route to catch them all*/}
                         <Route path="*" element={<NotFound />} />
                     </Routes>                
