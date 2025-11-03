@@ -27,3 +27,18 @@ Developed using Flask framework, which allows for developing server side API for
 ## UML diagram 
 ![UML Diagram](images/uml-diagram.png)
  
+## Starting Application 
+To start application its two part: Frontend (react) and backend (flask) 
+
+React app:
+Open CLI in frontend directory 
+<pre><code>npm start</code></pre>
+
+It starts the react scripts and launches Node.js server
+
+Flask Server:
+Open CLI in backend directory 
+<pre><code>python -m flask run</code></pre>
+
+
+This launches the the flask app and uses the env file for variables like name of app, Database routes. 
