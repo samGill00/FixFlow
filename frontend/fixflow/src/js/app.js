@@ -20,6 +20,7 @@ import ProjectPage from "./projectPage"
 import NotFound from './notFound';
 import HomePage from './home';
 import LoginPage from './login';
+import SignUpUser from './signup';
 
 
 /*header file */
@@ -39,6 +40,7 @@ class App extends React.Component{
                     <Routes>
                         <Route path='/' element={<HomePage />}></Route>
                         <Route path='/login' element={<div ><Header /><LoginPage /></div>}></Route>
+                        <Route path='/signup' element={<div ><Header /><SignUpUser /></div>}></Route>
                         <Route path='/profile' element={<div ><Header /><UserHomePage /></div>}></Route>
                         <Route  path='/projects/:projectID' element={<div ><Header /><ProjectPage /></div>}></ Route >
                         {/*route to catch them all*/}

@@ -15,8 +15,11 @@ COOKIE_NAME = "access_token"
 def token_req(f):
     @wraps(f)
     def decorator(*args, **kwargs):
+        #checking for perflight response 
+        if request.method == "OPTIONS":
+            return f(*args, **kwargs)
+
         token = request.cookies.get(COOKIE_NAME)
-        print("my token" , token)
         if not token:
             return jsonify({"error": "Missing token"}), 401
 
@@ -30,10 +33,10 @@ def token_req(f):
                 return jsonify({"message": "User not found!"}), 404
             
         except ExpiredSignatureError:
-            return jsonify({"error": "Token expired"}), 401
+            return jsonify({"error": "Session expired"}), 401
 
         except InvalidTokenError:
-            return jsonify({"error": "Invalid token"}), 401
+            return jsonify({"error": "Invalid Session"}), 401
         
         #returning user 
         request.user = user
@@ -49,7 +52,7 @@ def already_auth(f):
     def decorator(*args, **kwargs):
         #getting token
         token = request.cookies.get(COOKIE_NAME)
-
+        print(token)
         if not token:
             #that means needs authentication
             request.alreadyAuth = False

@@ -7,7 +7,7 @@ import jwt
 import bcrypt
 import random
 from .auth_decorator import already_auth
-from .helper_functions import getUserWithId, getUser, checkHasedPass, hashPass
+from .helper_functions import getUserWithId, getUser, checkHasedPass, hashPass, getAllUser
 
 #Secret key variable 
 SECRETKEY = 'my-key'
@@ -29,7 +29,6 @@ def login_user():
         return '', 204
     #checking if its already auth
     if request.alreadyAuth :
-        print("log is already ", request.alreadyAuth)
         response = jsonify({"message": "logged in"})
         return response
 
@@ -40,7 +39,8 @@ def login_user():
     #checking if the user is in the database 
     if not user :
         #user not found 
-        response = jsonify({"message": "No user found"})
+        response = jsonify({"message": "No user found"}), 401
+        return response
 
     if checkHasedPass(data['password'], user['password']) :
         #password is right
@@ -62,7 +62,7 @@ def login_user():
         )
     else:
         #password does not match 
-        response = jsonify({"message": "Wrong Password"})
+        response = jsonify({"message": "Wrong Password"}), 401
 
     return response
 
@@ -83,23 +83,22 @@ def addUser():
 
     #hashing user's password 
     userPass = hashPass(data['password'])
-
     #checking method 
     if request.method == 'POST' :
         try:
             g.db.execute("""
-                INSERT INTO user (userId, name, username, password)
-                VALUES (?, ?, ?, ?)
+                INSERT INTO user (userId, firstname, lastname, username, password)
+                VALUES (?, ?, ?, ?, ?)
             """, (
                 userId,
-                data['name'],
+                data['firstname'],
+                data['lastname'],
                 data['username'],
                 userPass
             ))
             g.db.commit()  #  update permanent
             addedUser = True
         except:
-            print("Error User Already signed up")
             addedUser = False
 
         
@@ -123,7 +122,7 @@ def addUser():
         )
     else:
         #password does not match 
-        response = jsonify({"message": "Sign up failed"})
+        response = jsonify({"error": "Sign up failed"}), 401
 
     return response
         
@@ -133,7 +132,6 @@ def addUser():
 def alreadyLoggedInUser():
     #checking if its already auth
     if request.alreadyAuth :
-        print("log is already ", request.alreadyAuth)
         response = jsonify({"message": "logged in"})
         return response
     
@@ -159,3 +157,9 @@ def userLogOut():
         max_age=0         
     )
     return response
+
+
+#ednpoint for testing only 
+@bp.route('/test/user', methods=['GET'])
+def getAlluserTest():
+    return getAllUser()

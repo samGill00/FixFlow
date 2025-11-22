@@ -78,6 +78,7 @@ def getOneProject(id):
 
 #endpoint of getting bugs data for given project id 
 @bp.route('/bugdata', methods=['GET'])
+@token_req
 def bugdata():
     query = request.args.get('projectid')  # e.g., /bugdata?projectid=Pxxxx
     bugDict = getBugData(query)  
@@ -88,13 +89,13 @@ def bugdata():
 @bp.route('/projectdata', methods=['GET'])
 @token_req
 def projectdata():
-    print("user :", request.user)
     user = request.user
     projsDict =  getAllUserProjects(user['userId'])
     return projsDict
 
 #getting a specific project
 @bp.route('/getproject', methods=['GET'])
+@token_req
 def getproject():
     projid = request.args.get('projectid')
     return getOneProject(projid)
@@ -102,6 +103,7 @@ def getproject():
 
 #endpoint for updating or adding new bugs 
 @bp.route('/addbug', methods=['POST','PUT'])
+@token_req
 def addbug():
 
     if request.method == 'OPTIONS':
@@ -161,6 +163,7 @@ def addbug():
 
 #endpoint for updating or adding new project 
 @bp.route('/addproject', methods=['POST','PUT' ,'OPTIONS'])
+@token_req
 def addproject():
     if request.method == 'OPTIONS':
         # Preflight request — respond with empty 204
@@ -168,6 +171,8 @@ def addproject():
 
 
     data = request.get_json()
+    #getting user id 
+    user = request.user
     #converting a list to a string 
     data['tags'] =  ", ".join(data['tags'])
     #return message 
@@ -189,13 +194,14 @@ def addproject():
         try:
             g.db.execute("""
         UPDATE project
-        SET title = ?, team = ?, tags = ?, bugDate = ?
+        SET title = ?, team = ?, tags = ?, bugDate = ?, userId = ?
         WHERE projectId = ?
     """, (
         data['title'],
         data['team'],
         data['tags'],
         data['bugDate'],
+        user['userId'],
         projId
         ))
             g.db.commit()  #  update permanent
@@ -209,13 +215,14 @@ def addproject():
         projId = f'PN{num}'
         try:
             g.db.execute("""
-        INSERT INTO project  (title , team , tags, bugDate, projectId )
-        VALUES (?, ?, ?, ?, ?)
+        INSERT INTO project  (title , team , tags, bugDate, userId, projectId )
+        VALUES (?, ?, ?, ?, ?, ?)
     """, (
         data['title'],
         data['team'],
         data['tags'],
         data['bugDate'],
+        user['userId'],
         projId
         ))
             g.db.commit()  #  update permanent
@@ -224,13 +231,14 @@ def addproject():
             resMessage = 'Error unsuccessful'
 
     #getting all the projects and return those 
-    message =  getAllProjects()
+    message =  getAllUserProjects(user['userId'])
     print(resMessage)
     return message, 200
 
 
 #endpoint for deleting a project entery using project id
 @bp.route('/removeproject', methods=['DELETE' ,'OPTIONS'])
+@token_req
 def deleteProject():
     if request.method == 'OPTIONS':
         # Preflight request — respond with empty 204
@@ -242,6 +250,8 @@ def deleteProject():
     dbResponse = 200
     message = ''
     resMessage= ''
+    #getting user id 
+    user = request.user
     #deleting when method is ready 
     if request.method == 'DELETE':
         try:
@@ -255,12 +265,13 @@ def deleteProject():
             resMessage = 'Error '
     #getting all the remaning projects 
     #getting all the projects and return those 
-    message =  getAllProjects()
+    message =  getAllUserProjects(user['userId'])
     print(resMessage)
     return message, 200
 
 #endpoint for deleting a bug from project 
 @bp.route('/removebug', methods=['DELETE' ,'OPTIONS'])
+@token_req
 def deleteBug():
     if request.method == 'OPTIONS':
         # Preflight request — respond with empty 204

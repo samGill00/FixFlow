@@ -18,7 +18,7 @@ const HomePage = () => {
             
           </Menu.Item>
           <Menu.Item>
-            <Link className="header" to={`/login`}>
+            <Link className="header" to={`/signup`}>
                     <Button secondary>Sign Up</Button>
             </Link>         
           </Menu.Item>

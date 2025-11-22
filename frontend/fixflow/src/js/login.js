@@ -2,14 +2,19 @@
 import React from "react";
 import { Button, Form, Grid, Header, Message, Segment } from 'semantic-ui-react';
 import 'semantic-ui-css/semantic.min.css';
-import { Link, useNavigate } from "react-router-dom";
+import { data, Link, useNavigate } from "react-router-dom";
 import { useState, useEffect } from 'react';
 
 const LoginPage = () => {
 
     //storing data
-    const [userData, setUserData] = useState([]);
+    const [userData, setUserData] = useState({username: "",
+                                              password: "",});
     const navigate = useNavigate();
+
+    //storiing error 
+    const [signError, setError] = useState(false);
+    const [errormsg, seterrormsg] = useState("Please check your details and try again.")
 
     //checking if the user is already logged in 
     useEffect(() => {
@@ -19,10 +24,11 @@ const LoginPage = () => {
                 })
                 .then(async (res) => {
                     if (res.ok) {
-                        // res.ok is false if status is 4xx or 5xx
+                        // res.ok is 
                         //send it to home page 
                         navigate('/profile');
                     }
+                    
                 })
                 .catch(err => console.error("Error checking login status:", err));
             }, [navigate]);
@@ -39,24 +45,24 @@ const LoginPage = () => {
                 body: JSON.stringify(userData)
             })
                 .then(async (res) => {
+                  const data = await res.json();
                       if (!res.ok) {
                         // res.ok is false if status is 4xx or 5xx
                         //send it to home page 
-                        navigate('/login');
+                        setError(true)
+                        seterrormsg(data.message)
                       } else {
                         navigate('/profile');
                         console.log("Success:", res.status, data.message);
                       }})
                 
                 .catch(err => {
-                    console.error(err);
                 });
 
 
             const result = await response.json();
             //console.log(result);
             } catch (error) {
-            console.error("Error sending data:", error);
             }
     }
 
@@ -73,6 +79,7 @@ const LoginPage = () => {
     <div style={styles.container}>
       <Grid textAlign="center" verticalAlign="middle" style={{ height: '100vh' }}>
         <Grid.Column style={{ maxWidth: 450 }}>
+          
           <Header as="h2" color="teal" textAlign="center">
             Log-in to your account
           </Header>
@@ -103,6 +110,13 @@ const LoginPage = () => {
               </Button>
             </Segment>
           </Form>
+          {signError && (
+                              <Message
+                              error
+                              header="Login Failed"
+                              content={errormsg}
+                              />
+                          )}
           <Message>
             New to us? <a href="#">Sign Up</a>
           </Message>

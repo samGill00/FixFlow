@@ -28,8 +28,10 @@ def getUser(username):
     user = g.db.execute(
         'SELECT * FROM user WHERE username = ?',(username,)
     ).fetchone()
-    print(dict(user))
-    return dict(user)
+    if not user:
+        return user
+    else:
+        return dict(user)
 
 def getUserWithId(userId):
     user = g.db.execute(
@@ -38,3 +40,10 @@ def getUserWithId(userId):
 
     return dict(user)
 
+def getAllUser () :
+    user = g.db.execute(
+        'SELECT * FROM user '
+    ).fetchall()
+
+    projsDict =  [dict(row) for row in user]
+    return projsDict

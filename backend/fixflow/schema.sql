@@ -3,9 +3,10 @@
 -- Crete User Table
 CREATE TABLE user (
   userId TEXT PRIMARY KEY,
-  name TEXT NOT NULL,
+  firstname TEXT NOT NULL,
+  lastname TEXT NOT NULL,
   username TEXT NOT NULL UNIQUE,
-  password VARCHAR NOT NULL       -- Store as comma-separated string or JSON
+  password VARCHAR NOT NULL
 );
 
 
@@ -37,9 +38,9 @@ CREATE TABLE bug (
 
 --adding some old data 
 -- Insert Data into user table
-INSERT INTO user (userId, name, username, password) VALUES
-('US1234', 'James Smith', 'james112', "$2b$12$YY1mEtRRW/CR7C3ugSmURuEoLCj2LQkq6USvDsB7JVW16e5avm9hS"),
-('US1111', 'Laura Jones', 'laura121', "$2b$12$Z8H3T1b/T8G6gybdJFNFlOKXOByNSOyTLCe3O1M5HCiTNg3Li6oUy");
+INSERT INTO user (userId, firstname, lastname, username, password) VALUES
+('US1234', 'James','Smith', 'james112', "$2b$12$YY1mEtRRW/CR7C3ugSmURuEoLCj2LQkq6USvDsB7JVW16e5avm9hS"),
+('US1111', 'Laura','Jones', 'laura121', "$2b$12$Z8H3T1b/T8G6gybdJFNFlOKXOByNSOyTLCe3O1M5HCiTNg3Li6oUy");
 
 -- Insert data into project table
 INSERT INTO project (projectId, title, team, tags, bugDate, userId) VALUES
