@@ -8,9 +8,18 @@ Developed using React framework and implemented it using a function driven parad
 ### Routuing
 Using browser side routing for quicker reponsive web app, it utilises routes and route with Links to naviagte the application
 #### Pages 
-Home : '/' Page loads all the projects in user's directory
+Home : '/' Land page gives user a welcoming experience and berief example of how the app looks and options for sign in and sign up 
 
-![Home page](images/home-page.png)
+![Home page](images/home-land.png)
+
+Login : '/login' Login page allows user to enter username and password to log into system and go to profile (only after authetication)
+
+![Login page](images/login-page.png)
+
+
+Profile  : '/profile' Page loads all the projects in user's directory, its a secured link only opens after authetication 
+
+![Profile page](images/home-page.png)
 
 Project Page: '/projects/PXXX' Displays all the bugs linked to the project
 
