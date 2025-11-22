@@ -17,6 +17,11 @@ Login : '/login' Login page allows user to enter username and password to log in
 ![Login page](images/login-page.png)
 
 
+SignUp : '/signup' Signup page to allows customer to add new users and go to profile and add new projects and bugs reports. 
+
+![Login page](images/signup-page.png)
+
+
 Profile  : '/profile' Page loads all the projects in user's directory, its a secured link only opens after authetication 
 
 ![Profile page](images/home-page.png)
