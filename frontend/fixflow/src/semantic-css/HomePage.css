@@ -1,0 +1,57 @@
+.homepage-background {
+  height: 100vh;
+  width: 100%;
+  background-image: url("../assets/background-img.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+}
+
+.homepage-background::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6); 
+  z-index: 1;
+}
+.center-content, h1.ui.menu, p, .top-bar, .right-img {
+  font: 'Comic Sans MS' ,'Times New Roman', Times, serif;
+  position: relative;
+  z-index: 2;
+   
+}
+
+h1.ui.header {
+    font-size: 4rem !important;   
+    font-weight: 700 !important;
+    font-family: "Poppins", sans-serif;
+}
+
+h3.ui.header {
+    font-size: 2rem !important;   
+    font-weight: 300 !important;
+}
+
+p.ui.description {
+    font-weight: 500 !important;
+    font-size: 1.5rem !important;  
+    color: white;
+    marginTop: "1em";
+    z-index: 2;
+}
+
+.top-bar{
+    z-index: 2;
+}
+
+.right-img {
+    width: 100%;
+    max-width: 600px;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+    
+}

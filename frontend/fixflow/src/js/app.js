@@ -15,9 +15,11 @@ Routes,
 
 
 
-import HomePage from "./home"
+import UserHomePage from "./userHome"
 import ProjectPage from "./projectPage"
 import NotFound from './notFound';
+import HomePage from './home';
+import LoginPage from './login';
 
 
 /*header file */
@@ -32,11 +34,13 @@ class App extends React.Component{
         return (
             /*header*/
             <div>
-                <Header />
+                
                 <div  >  
                     <Routes>
                         <Route path='/' element={<HomePage />}></Route>
-                        <Route  path='/projects/:projectID' element={<ProjectPage />}></ Route >
+                        <Route path='/login' element={<div ><Header /><LoginPage /></div>}></Route>
+                        <Route path='/profile' element={<div ><Header /><UserHomePage /></div>}></Route>
+                        <Route  path='/projects/:projectID' element={<div ><Header /><ProjectPage /></div>}></ Route >
                         {/*route to catch them all*/}
                         <Route path="*" element={<NotFound />} />
                     </Routes>                

@@ -14,6 +14,7 @@ import projectList from './data/project-data.json';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 
 const ProjectPage = () => {
+    const navigate = useNavigate();
     //geting project id from url 
     const {projectID} = useParams();
 
@@ -26,10 +27,22 @@ const ProjectPage = () => {
     }
     //loading data 
     useEffect(() => {
-        fetch(`http://localhost:5000/data/getproject?projectid=${projectID}`)
-            .then(res => res.json())
-            .then(data => setproject(stringToList(data)))
-    .catch(err => console.error(err));
+        fetch(`http://localhost:5000/data/getproject?projectid=${projectID}`, {
+            method: "GET",
+            credentials: "include" 
+            })
+            .then(async (res) => {
+                  const data = await res.json();
+                      if (!res.ok) {                     
+                        // res.ok is false if status is 4xx or 5xx
+                        //send it to home page 
+                        navigate('/');                        
+                      } else {
+                        console.log("Success:", res.status, data.message);
+                        setproject(stringToList(data))
+                      }                    
+                    })
+            .catch(err => console.error(err));
         }, []);
 
     return (

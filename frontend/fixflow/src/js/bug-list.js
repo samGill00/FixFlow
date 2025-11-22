@@ -1,5 +1,6 @@
 /*This page shows all the recorded bugs of the projects*/
 import React, {useState, useEffect} from "react"; 
+import { useNavigate } from 'react-router-dom';
 
 //importing semantic react components 
 import {Button, Modal, Form, Input, Label, Icon} from 'semantic-ui-react';
@@ -13,6 +14,7 @@ import bugList from './/data/bug-data.json';
 
 //bugs represents in the project page 
 function Bugs() {
+    const navigate = useNavigate()
     //variables and function to determine when editing is on 
     const [isEditing, setIsEditing] = useState(false);
 
@@ -24,9 +26,21 @@ function Bugs() {
 
     //getting/ sedding data 
     useEffect(() => {
-            fetch(`http://localhost:5000/data/bugdata?projectid=${projectID}`)
-                .then(res => res.json())
-                .then(data => editBugData(data))
+            fetch(`http://localhost:5000/data/bugdata?projectid=${projectID}`,{
+            method: "GET",
+            credentials: "include" 
+            })
+                .then(async (res) => {
+                  const data = await res.json();
+                      if (!res.ok) {                     
+                        // res.ok is false if status is 4xx or 5xx
+                        //send it to home page 
+                        navigate('/');                        
+                      } else {
+                        console.log("Success:", res.status, data.message);
+                        editBugData(data)
+                      }                    
+                    })
         .catch(err => console.error(err));
             }, []);
 
@@ -52,13 +66,23 @@ function Bugs() {
     try {
       const response = await fetch('http://localhost:5000/data/addbug', {
         method: type,
+        credentials: "include" ,
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(updatedBug)
       })
-        .then(res => res.json())
-        .then(data => editBugData(data))
+        .then(async (res) => {
+                  const data = await res.json();
+                      if (!res.ok) {                     
+                        // res.ok is false if status is 4xx or 5xx
+                        //send it to home page 
+                        navigate('/');                        
+                      } else {
+                        console.log("Success:", res.status, data.message);
+                        editBugData(data)
+                      }                    
+                    })
 
       const result = await response.json();
       //console.log(result);
@@ -74,10 +98,20 @@ function Bugs() {
     const handleDelete = async (projID, bugID) => {
       try {
         const response = await fetch(`http://localhost:5000/data/removebug?projectid=${projID}&bugid=${bugID}`, {
-          method: 'DELETE'
+          method: 'DELETE',
+          credentials: "include" 
         })
-          .then(res => res.json())
-          .then(data => editBugData(data))
+          .then(async (res) => {
+                  const data = await res.json();
+                      if (!res.ok) {                     
+                        // res.ok is false if status is 4xx or 5xx
+                        //send it to home page 
+                        navigate('/');                        
+                      } else {
+                        console.log("Success:", res.status, data.message);
+                        editBugData(data)
+                      }                    
+                    })
 
         const result = await response.json();
       //console.log(result);

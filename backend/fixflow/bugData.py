@@ -3,7 +3,7 @@ from flask import (
     Blueprint, flash, g, redirect, render_template, request, session, url_for
 )
 import random
-
+from .auth_decorator import token_req
 
 bp = Blueprint('data', __name__, url_prefix='/data')
 
@@ -33,6 +33,24 @@ def getAllProjects():
                             GROUP BY 
                             p.projectId, p.title ;
                             """).fetchall()
+    projsDict =  [dict(row) for row in projs]
+    return projsDict
+
+#getting all of user's project 
+def getAllUserProjects(id):
+    projs = g.db.execute("""
+                           SELECT 
+                            p.projectId,
+                            p.title, p.tags, p.bugDate, p.team,
+                            COUNT(b.bugId) AS bug_count
+                            FROM 
+                            project p
+                            LEFT JOIN 
+                            bug b ON p.projectId = b.projectId
+                            WHERE userId = ?
+                            GROUP BY 
+                            p.projectId, p.title ;
+                            """,(id,)).fetchall()
     projsDict =  [dict(row) for row in projs]
     return projsDict
 
@@ -68,8 +86,11 @@ def bugdata():
 
 #endpoint for getting all the projects 
 @bp.route('/projectdata', methods=['GET'])
+@token_req
 def projectdata():
-    projsDict =  getAllProjects()
+    print("user :", request.user)
+    user = request.user
+    projsDict =  getAllUserProjects(user['userId'])
     return projsDict
 
 #getting a specific project
@@ -269,3 +290,4 @@ def deleteBug():
     message = getBugData(project_id)
     print(resMessage)
     return message, 200
+

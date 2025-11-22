@@ -9,7 +9,7 @@ def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__, instance_relative_config=True)
     ##cors for cross port access
-    CORS(app)
+    CORS(app,  supports_credentials=True)
     app.config.from_mapping(
         SECRET_KEY='dev',
         DATABASE=os.path.join(app.instance_path, 'fixflow.db'),
@@ -51,10 +51,11 @@ def create_app(test_config=None):
     app.cli.add_command(init_db_command)
 
     #adding blueprints 
-    from . import bugData 
+    from . import bugData, auth_login
     #this is for getting bugs data
     app.register_blueprint(bugData.bp)
-
+    #this bp is for logging user in 
+    app.register_blueprint(auth_login.bp)
     
 
     # a simple page that says hello

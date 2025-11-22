@@ -4,7 +4,7 @@ import React from 'react';
 import { useState } from 'react';
 
 //routing comp 
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 
 //importing semantic react components 
 import {Button, Modal, Form, Input, Label, Icon} from 'semantic-ui-react';
@@ -22,7 +22,7 @@ import projectData from './data/project-data.json'
 
 function ProjectList() {
     //rendering 
-
+    const navigate = useNavigate();
     //function that converts the strings in tags 
     const stringToList = (inputArray) => {
       //console.log("inside input ", inputArray)
@@ -38,10 +38,22 @@ function ProjectList() {
     const [projData, setProjectData] = useState([]);
     //getting/ sedding data 
     useEffect(() => {
-            fetch(`http://localhost:5000/data/projectdata`)
-                .then(res => res.json())
-                .then(data => setProjectData(stringToList(data)))
-        .catch(err => console.error(err));
+            fetch(`http://localhost:5000/data/projectdata`, {
+            method: "GET",
+            credentials: "include" 
+            })
+                .then(async (res) => {
+                  const data = await res.json();
+                      if (!res.ok) {                     
+                        // res.ok is false if status is 4xx or 5xx
+                        //send it to home page 
+                        navigate('/');                        
+                      } else {
+                        console.log("Success:", res.status, data.message);
+                        setProjectData(stringToList(data))
+                      }                    
+                    })
+                .catch(err => console.error(err));
             }, []);
     //
     
@@ -57,16 +69,24 @@ function ProjectList() {
     try {
       const response = await fetch('http://localhost:5000/data/addproject', {
         method: type,
+        credentials: "include" ,
         headers: {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(updatedBug)
       })
-        .then(res => res.json())
-        .then(data => {
-          // Update local state to trigger re-render
-          setProjectData(stringToList(data));
-        });
+        .then(async (res) => {
+                  const data = await res.json();
+                      if (!res.ok) {                     
+                        // res.ok is false if status is 4xx or 5xx
+                        //send it to home page 
+                        navigate('/');                        
+                      } else {
+                        console.log("Success:", res.status, data.message);
+                        // Update local state to trigger re-render
+                        setProjectData(stringToList(data));
+                      }                    
+                    })
 
       const result = await response.json();
       //console.log(result);
@@ -81,14 +101,21 @@ function ProjectList() {
     const handleDelete = async (projID) => {
       try {
         const response = await fetch(`http://localhost:5000/data/removeproject?id=${projID}`, {
-          method: 'DELETE'
+          method: 'DELETE',
+          credentials: "include" 
         })
-          .then(res => res.json())
-          .then(data => {
-            // Update local state to trigger re-render
-            setProjectData(stringToList(data));
-          });
-
+          .then(async (res) => {
+                  const data = await res.json();
+                      if (!res.ok) {                     
+                        // res.ok is false if status is 4xx or 5xx
+                        //send it to home page 
+                        navigate('/');                        
+                      } else {
+                        console.log("Success:", res.status, data.message);
+                        // Update local state to trigger re-render
+                        setProjectData(stringToList(data));
+                      }                    
+                    })
         const result = await response.json();
       //console.log(result);
       } 
